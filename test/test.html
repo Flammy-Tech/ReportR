@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+
+        }
+
+        th:nth-last-child(){
+            height: 100%;
+            width: 100%;
+        }
+
+        .dark{
+            background-color: black;
+        }
+
+        .bold{
+            font-weight: bold;
+            font-weight: 800;
+        }
+
+        .italic{
+            font-style: italic;
+        }
+
+        .underline{
+            text-decoration: underline;
+        }
+
+        .data{
+            height: 2rem;
+            width: 5rem;
+        }
+
+    </style>
+</head>
+<body>
+    <table border="1">
+        <thead>
+            <tr>
+                <th colspan="4" class="bold">Birds Collection</th>
+                <th colspan="2" rowspan="5">T </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td class="dark"></td>
+                <td class="bold underline">Group</td>
+                <td class="bold underline">Cage</td>
+                <td class="bold underline">Qty</td>
+            </tr>
+
+            <tr>
+                <td class="italic">Kestrel</td>
+                <td>B</td>
+                <td>2</td>
+                <td>12</td>
+            </tr>
+
+            <tr>
+                <td class="italic">Cardinal</td>
+                <td>A</td>
+                <td>3</td>
+                <td>13</td>
+            </tr>
+
+            <tr>
+                <td>Parrot</td>
+                <td>B</td>
+                <td>1</td>
+                <td>5</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="data">
+
+    </div>
+    <script>
+        let data = {
+        name: "Lewis",
+        age:23
+    }
+
+    var jsonData = JSON.stringify(data);
+    
+    var dataElement = document.getElementById("data");
+    dataElement.innerHTML = `<h2>${data.name}</h2>`;
+    </script>
+</body>
+
+</html>

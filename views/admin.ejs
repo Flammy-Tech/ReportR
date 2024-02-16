@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/common.css">
+    <title>Admin</title>
+</head>
+<body id="admin-body">
+    <div class="admin__container">
+        <nav class="admin__nav" id="admin__nav">
+            <div class="admin__nav-header">
+                <h3>ReportR</h3>
+                
+                <div class="nav-item" id="mobile-nav-close">
+                    <span></span>
+                    <span></span>
+                    
+                </div>
+
+            </div>
+            <div class="admin__nav-body" id="mobile-nav">
+                <span class="mobile-links">
+                    <ul class="admin-links">
+                        <li data-tab-target="#dashboard"> <a href="#">🏡 DashBoard</a> </li>
+                        <li data-tab-target="#students"> <a href="#">👩🏾‍🎓 Students</a> </li>
+                        <li data-tab-target="#add"> <a href="#">➕ Add</a> </li>
+                        <li data-tab-target="#activities"> <a href="#">🏅 Activities</a> </li>
+                    </ul>
+
+                    <ul class="past__reports">
+                        <li data-tab-target="#thisWeek"><a href="#">📄 This Week</a></li>
+                        <li data-tab-target="#thisMonth"><a href="#">📄 This Month</a></li>
+                        <li data-tab-target="#lastMonth"><a href="#">📄 Last Month</a></li>
+                        <li data-tab-target="#thisYear"><a href="#">📄 This Year</a></li>
+
+                    </ul>
+
+                </span>
+
+                    <ul class="preferences">
+                        <li data-tab-target="#settings"><a href="#">⚙️ Settings</a></li>
+                    </ul>
+            </div>
+        </nav>
+        <div class="admin__main">
+            <div class="admin__main-header">
+                <div class="admin__main-mobile-header">
+                    <h3>ReportR</h3>
+                    <div class="mobile-nav-toggle" id="mobile-nav-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="admin__main-body">
+                <div class="admin__main-body-container tab-content">
+                    <div id="dashboard" data-tab-content>
+                        <div class="dashboard__container">
+                            <div class="all-students-container">
+                                <table border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>ADM NO</th>
+                                            <th>NAME</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% results.forEach(student => { %>
+                                            <tr>
+                                                <td><%= student.ADMNO %></td>
+                                                <td><%= student.NAME %></td>
+                                                <!-- <td><%= student['DATE '] %></td> -->
+
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="all-activities-container">
+                                <div class="all-activities">
+                                    <div class="all-activities-header">Activities 🏅</div>
+                                    <div class="all-activities-body"></div>
+
+                                </div>
+
+                                <div class="all-exams">
+                                    <div class="all-exams-header">[Name] 📝</div>
+                                    <div class="all-exams-body">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="students" data-tab-content class="active">
+                        <% for (let i = 0; i < students.length; i++) { %>
+                            <div class="student-card">
+                                <div class="minimal-card">
+                                    <div class="student-card-img">
+                                        <img src="../assets/Icons/person-64.png" alt="Student Image">
+                                    </div>
+
+                                    <div class="student-card-details">
+                                        <h4 id="student-name"><%= students[i].name %></h4>
+                                        <h4 id="student-admission"><%= students[i]._id %></h4>
+                                        <h4 id="student-class"><%= students[i].class %></h4>
+                                    </div>
+
+                                </div>
+                                <div class="expanded-card ">
+                                    <div class="expanded-card-header">
+                                        <h1><%= students[i].name %></h1>
+                                        <h4><%= students[i].class %></h4>
+
+                                        <div class="expanded-card-header-profile">
+                                            <img src="../assets/Icons/person-64.png" alt="Student Image">
+                                        </div>
+
+                                    </div>
+                                    <div class="expanded-card-body">
+                                        <div class="function__buttons">
+                                            <button class="fn-buttons" id="edit">🖋️ Edit</button>
+                                            <button class="fn-buttons add-button" id="add-button">➕ Add</button>
+
+                                        </div>
+
+                                        <form action="/admin" method="post" class="add-activity-form not-show">
+                                            <h4>+ Add Activity</h4>
+                                            <input type="text" name="activityName" id="activityName" placeholder="Activity Name">
+
+                                            <textarea name="activityDescription" id="activityDescription" cols="20" rows="10" placeholder="Activity Description"></textarea>
+                                        </form>
+
+                                        <div class="all-activities-container">
+                                            <div class="all-activities">
+                                                <div class="all-activities-header">Activities 🏅</div>
+                                                <div class="all-activities-body"></div>
+            
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+                    <div id="add" data-tab-content>
+                        <div class="add__container">
+                            <div class="add-form">
+                                <form method="post" action="/admin" id="profileForm">
+                                    <input type="text" name="name" id="name" placeholder="Name">
+                                    <input type="text" name="admission" id="admission" placeholder="admission">
+                                    <input type="text" name="class" id="class" placeholder="class">
+                                    <input type="text" name="connectionId" id="connectionId" placeholder="connection Id">
+                                    <label for="profile">Profile Picture</label>
+                                    <input type="file" name="profile" id="profile">
+                                    <input type="submit" value="Save">
+                                </form>
+                            </div>
+                            <div class="add-preview">
+                                <div class="add-preview-card">
+                                    <div class="add-preview-card-image">
+                                        <img id="previewImage" src="../assets/Icons/person-64.png" alt="person Icon">
+                                    </div>
+                                    <div class="add-preview-card-description">
+                                        <div id="previewName"></div>
+                                        <div id="previewAdmission"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="activities" data-tab-content>
+                        Activities
+
+                    </div>
+
+                    <div id="thisWeek" data-tab-content>
+                        thisWeek
+
+                    </div>
+
+                    <div id="thisMonth" data-tab-content>
+                        thisMonth
+
+                    </div>
+
+                    <div id="lastMonth" data-tab-content>
+                        lastMonth
+
+                    </div>
+
+                    <div id="thisYear" data-tab-content>
+                        thisYear
+
+                    </div>
+
+                    <div id="settings" data-tab-content>
+                        settings
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <dialog id="add-activity-dialog" class="add-activity-dialog">
+
+    </dialog>
+
+
+    <!-- Tab Switching -->
+    <script>
+        const tabs = document.querySelectorAll('[data-tab-target]');
+        const tabContents = document.querySelectorAll('[data-tab-content]');
+
+        // Loop Through the tabs
+        tabs.forEach(tab =>{
+            tab.addEventListener('click', ()=>{
+                const target = document.querySelector(tab.dataset.tabTarget);
+                tabContents.forEach(tabContent =>{
+                    tabContent.classList.remove('active');
+                })
+                target.classList.add('active');
+            })
+        });
+    </script>
+
+    <!-- Navigation Bar -->
+    <script>
+        const navToggle = document.getElementById("mobile-nav-toggle");
+        const navClose = document.getElementById("mobile-nav-close");
+        const mobileNavLink = document.getElementById("admin__nav");
+
+        mobileNavLink.classList.toggle("hide");
+
+
+        navToggle.addEventListener("click", function(){
+            mobileNavLink.classList.toggle("show");
+            mobileNavLink.classList.toggle("hide");
+
+            if (mobileNavLink.classList.contains("hide")){
+                mobileNavLink.classList.toggle("show");
+                console.log("show");
+            }
+            else if(mobileNavLink.classList.contains("show")){
+                navClose.addEventListener("click", function(){
+                    mobileNavLink.classList.remove("show");
+                    mobileNavLink.classList.toggle("hide");
+                    console.log('hidden')
+                    
+                });
+
+                
+            }
+
+            // Sticky NavBar
+            window.onscroll = function() {myFunction()};
+
+            var navbar = document.getElementsByClassName("admin__main-header");
+            console.log("Added Sticky");
+            var sticky = document.body.scrollHeight * 0.1;
+            console.log(sticky)
+
+            function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky")
+            } else {
+                // navbar.classList.remove("sticky");
+            }
+            }
+        });
+            
+
+    </script>
+
+    <!-- Save Data from add Form -->
+    <!-- <script>
+        function previewProfile(previewUrl) {
+            const fileInput = document.getElementById('profile');
+            const previewImage = document.getElementById('previewImage');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                previewImage.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.src = previewUrl;
+            }
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const studentData = {};
+            formData.forEach((value, key) => {
+                studentData[key] = value;
+            });
+
+            const admission = studentData['admission'];
+            const students = JSON.parse(localStorage.getItem('students')) || {};
+
+            if (students[admission]) {
+                alert('Student with this admission already exists!');
+                return;
+            }
+
+            students[admission] = studentData;
+            localStorage.setItem('students', JSON.stringify(students));
+
+            // Update preview
+            document.getElementById('previewName').textContent = studentData['name'];
+            document.getElementById('previewAdmission').textContent = studentData['admission'];
+
+            // Clear form after submission
+            this.reset();
+            console.log(students);
+            // document.getElementById('previewImage').src = document.getElementById('profile').value;
+
+            alert('Student saved successfully!');
+        });
+    </script> -->
+
+
+    <!-- Pop Out Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentCards = document.querySelectorAll('.student-card');
+            const minimalCards = document.querySelectorAll('.minimal-card');
+            const expandedCards = document.querySelectorAll('.expanded-card');
+            const expandedCardHeaders = document.querySelectorAll('.expanded-card-header');
+
+            studentCards.forEach((studentCard) => {
+                studentCard.addEventListener('click', () => {
+                    const isPopup = studentCard.classList.contains("popup");
+
+                    studentCards.forEach((card) => {
+                        card.classList.remove("popup");
+                    });
+
+                    minimalCards.forEach((minimalCard) => {
+                        minimalCard.classList.remove("clearCard");
+                    });
+
+                    expandedCards.forEach((expandedCard) => {
+                        expandedCard.classList.remove("show-expandedCard");
+                    });
+
+                    if (!isPopup) {
+                        studentCard.classList.add("popup");
+                        const expandedCard = studentCard.querySelector('.expanded-card');
+                        expandedCard.classList.add("show-expandedCard");
+                        minimalCards.forEach((minimalCard) => {
+                            minimalCard.classList.add("clearCard");
+                        });
+                    }
+                });
+            });
+
+            expandedCardHeaders.forEach((header) => {
+            header.addEventListener('click', (event) => {
+            // Prevent the event from bubbling up and closing the card
+            event.stopPropagation();
+
+            const expandedCard = header.parentElement;
+            if (expandedCard) {
+                expandedCard.classList.remove('show-expandedCard'); // Remove the class when the header is clicked
+                const associatedStudentCard = expandedCard.previousElementSibling; // assuming student card comes before expanded card
+                if (associatedStudentCard && associatedStudentCard.classList.contains('student-card')) {
+                    associatedStudentCard.classList.remove('popup'); // Remove the class from the associated student card
+                }
+            }
+        });
+    });
+
+
+            // Add click event listeners to expanded card bodies to prevent card closing
+            expandedCards.forEach((expandedCard) => {
+                expandedCard.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+            });
+        });
+    </script>
+
+
+    <!-- Add Activities -->
+    <script>
+        const addButton = document.querySelectorAll(".add-button");
+        const addActivitiesDialog = document.getElementById("add-activity-dialog");
+        const addActivityStudent = document.querySelector(".add-activity-form");
+
+
+        addButton.forEach((buttonAdd)=>{
+            buttonAdd.addEventListener('click', () => {
+                addActivityStudent.classList.remove("not-show");
+                console.log("Add Activity");
+        
+            });
+            
+        })
+
+
+
+    </script>
+
+        
+</body>
+</html>

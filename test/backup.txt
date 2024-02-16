@@ -1,0 +1,305 @@
+var express = require('express');
+var router = express.Router();
+const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb');
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const csvParser = require('csv-parser');
+
+
+// Initialize MongoDB Database
+var url = "mongodb://localhost:27017";
+var dbName = "ReportR";
+
+var client = new MongoClient(url);
+
+// Connect to the database
+async function connectToDatabase() {
+    try {
+        await client.connect();
+        console.log("Connected to the database");
+    } catch (err) {
+        console.error("Error connecting to the database:", err);
+        throw err;
+    }
+}
+
+// Function to retrieve students
+async function retrieveStudents() {
+    try {
+        var db = client.db(dbName);
+        var collection = db.collection("students");
+        var documents = await collection.find({}).toArray();
+        return documents; // Return the retrieved data
+    } catch (err) {
+        console.error("Error retrieving students:", err);
+        throw err;
+    }
+}
+
+// Function to insert a document into a collection
+async function insertDocument(collectionName, document) {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const result = await collection.insertOne(document);
+        console.log(`Added document with _id: ${result.insertedId}`);
+    } catch (error) {
+        console.error('Error adding document:', error);
+        throw error;
+    }
+}
+
+// Function to write CSV data to a file
+async function writeCSVToFile(filename, data) {
+    try {
+        // Write data to a CSV file using the specified filename
+        fs.writeFileSync(filename + '.csv', data);
+        console.log('CSV file created successfully');
+    } catch (error) {
+        console.error('Error writing CSV file:', error);
+        throw error;
+    }
+}
+
+
+// Function to read CSV file and return parsed data
+async function readCSVFile(filename) {
+    return new Promise((resolve, reject) => {
+        const results = [];
+        fs.createReadStream(filename)
+            .pipe(csvParser())
+            .on('data', (data) => results.push(data))
+            .on('end', () => resolve(results))
+            .on('error', (error) => reject(error));
+    });
+}
+
+
+
+
+// Middleware to parse incoming request bodies
+router.use(bodyParser.urlencoded({ extended: true }));
+
+// Setup routes
+router.route('/')
+    .get(async (req, res) => {
+        try {
+            await connectToDatabase();
+            var students = await retrieveStudents();
+            
+            // Assuming 'students' is in CSV format already
+            await writeCSVToFile(req.body.admission, students);
+            
+            res.render('admin', { students }); // You need to define 'admin' view
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Internal Server Error");
+        }
+    })
+    .post(async (req, res) => {
+        try {
+            await connectToDatabase();
+            var students = await retrieveStudents();
+            
+            const student = {
+                name: req.body.name,
+                connectionId: req.body.connectionId,
+                _id: req.body.admission,
+                class: req.body.class,
+                profile: req.body.profile, // This should be the file path or storage reference
+            };
+            
+            // Insert the student into the collection
+            await insertDocument('students', student);
+            
+            // Assuming 'students' is in CSV format already
+            await writeCSVToFile(req.body.admission, students);
+            
+            res.status(200).render('admin', { students });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+
+
+module.exports = router;
+
+
+
+
+
+
+
+////////////////////////////////////////////
+
+
+<!-- Pop Out Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const studentCards = document.querySelectorAll('.student-card');
+        const minimalCards = document.querySelectorAll('.minimal-card');
+        const expandedCards = document.querySelectorAll('.expanded-card');
+        const expandedCardHeader = document.querySelectorAll('.expanded-card-header');
+        
+        studentCards.forEach((studentCard) => {
+            studentCard.addEventListener('click', () => {
+                if (!studentCard.classList.contains("popup")) {
+                    // Remove the popup class from all other cards
+                    studentCards.forEach((card) => {
+                        if (card !== studentCard) {
+                            card.classList.remove("popup");
+                        }
+                    });
+
+                    studentCard.classList.add("popup");
+
+                    // Clear all minimal cards
+                    minimalCards.forEach((minimalCard) => {
+                        minimalCard.classList.add("clearCard");
+                    });
+
+                    // Show expanded card for the clicked student card
+                    expandedCards.forEach((expandedCard) => {
+                        expandedCard.classList.remove("show-expandedCard");
+                    });
+
+                    const expandedCard = studentCard.querySelector('.expanded-card');
+                    expandedCard.classList.add("show-expandedCard");
+                } else {
+                    studentCard.classList.remove("popup");
+
+                    minimalCards.forEach((minimalCard) => {
+                        minimalCard.classList.remove("clearCard");
+                    });
+
+                    expandedCards.forEach((expandedCard) => {
+                        expandedCard.classList.remove("show-expandedCard");
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+///////////////////////////////2 //////////////////////////////
+<!-- Pop Out Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const studentCards = document.querySelectorAll('.student-card');
+        const minimalCards = document.querySelectorAll('.minimal-card');
+        const expandedCards = document.querySelectorAll('.expanded-card');
+        const expandedCardHeaders = document.querySelectorAll('.expanded-card-header');
+
+        studentCards.forEach((studentCard) => {
+            studentCard.addEventListener('click', () => {
+                const isPopup = studentCard.classList.contains("popup");
+
+                studentCards.forEach((card) => {
+                    card.classList.remove("popup");
+                });
+
+                minimalCards.forEach((minimalCard) => {
+                    minimalCard.classList.remove("clearCard");
+                });
+
+                expandedCards.forEach((expandedCard) => {
+                    expandedCard.classList.remove("show-expandedCard");
+                });
+
+                if (!isPopup) {
+                    studentCard.classList.add("popup");
+                    const expandedCard = studentCard.querySelector('.expanded-card');
+                    expandedCard.classList.add("show-expandedCard");
+                    minimalCards.forEach((minimalCard) => {
+                        minimalCard.classList.add("clearCard");
+                    });
+                }
+            });
+        });
+
+        expandedCardHeaders.forEach((header) => {
+            header.addEventListener('click', (event) => {
+                const expandedCard = event.target.closest('.expanded-card');
+                if (expandedCard) {
+                    expandedCard.classList.remove('show-expandedCard');
+                    const associatedStudentCard = expandedCard.previousElementSibling; // assuming student card comes before expanded card
+                    if (associatedStudentCard && associatedStudentCard.classList.contains('student-card')) {
+                        associatedStudentCard.classList.remove('popup');
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+////////////////////////////////////////////////////////////////3333////////////////////////////////
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const studentCards = document.querySelectorAll('.student-card');
+        const minimalCards = document.querySelectorAll('.minimal-card');
+        const expandedCards = document.querySelectorAll('.expanded-card');
+        const expandedCardHeaders = document.querySelectorAll('.expanded-card-header');
+
+        studentCards.forEach((studentCard) => {
+            studentCard.addEventListener('click', () => {
+                const isPopup = studentCard.classList.contains("popup");
+
+                studentCards.forEach((card) => {
+                    card.classList.remove("popup");
+                });
+
+                minimalCards.forEach((minimalCard) => {
+                    minimalCard.classList.remove("clearCard");
+                });
+
+                expandedCards.forEach((expandedCard) => {
+                    expandedCard.classList.remove("show-expandedCard");
+                });
+
+                if (!isPopup) {
+                    studentCard.classList.add("popup");
+                    const expandedCard = studentCard.querySelector('.expanded-card');
+                    expandedCard.classList.add("show-expandedCard");
+                    minimalCards.forEach((minimalCard) => {
+                        minimalCard.classList.add("clearCard");
+                    });
+                }
+            });
+        });
+
+        expandedCardHeaders.forEach((header) => {
+         header.addEventListener('click', (event) => {
+        // Prevent the event from bubbling up and closing the card
+        event.stopPropagation();
+
+        const expandedCard = header.parentElement;
+        if (expandedCard) {
+            expandedCard.classList.remove('show-expandedCard'); // Remove the class when the header is clicked
+            const associatedStudentCard = expandedCard.previousElementSibling; // assuming student card comes before expanded card
+            if (associatedStudentCard && associatedStudentCard.classList.contains('student-card')) {
+                associatedStudentCard.classList.remove('popup'); // Remove the class from the associated student card
+            }
+        }
+    });
+});
+
+
+        // Add click event listeners to expanded card bodies to prevent card closing
+        expandedCards.forEach((expandedCard) => {
+            expandedCard.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+    });
+</script>

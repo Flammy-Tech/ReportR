@@ -1,0 +1,3 @@
+C:\Users\flamm\code\Channels\Development\ReportR\obj\Debug\ReportR.njsproj.AssemblyReference.cache
+C:\Users\flamm\code\Channels\Development\ReportR\obj\Debug\ReportR.njsproj.CoreCompileInputs.cache
+C:\Users\flamm\code\Channels\Development\ReportR\bin\Microsoft.NodejsTools.WebRole.dll

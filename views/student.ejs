@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/common.css">
+    <title>Student</title>
+</head>
+<body class="client__page">
+    <nav class="client__nav">
+        <div class="brand-logo">
+            <h5>ReportR</h5>
+        </div>
+
+        <ul class="client-links">
+            <li><a href="#" data-tab-target="#profile">Profile</a></li>
+            <li><a href="#" data-tab-target="#contact">Contact</a></li>
+        </ul>
+
+    </nav>
+
+    <div class="client__body">
+        <div class="client__body-content">
+            <div class="client__body-content-header">
+                <div class="client-image-holder">
+                    <img src="../assets/icons/person-64.png" alt="Client Image">
+                </div>
+
+                <!-- <h4 id="name"><%= JSON.stringify(student) %></h4> -->
+                <% student.forEach(function(student) { %>
+                    <h2 id="name"><%= student.name %></h2>
+                <% }); %>
+                
+
+            </div>
+
+            <ul class="client-links">
+                <li><a href="#" data-tab-target="#activity">DashBoard</a></li>
+                <li><a href="#" data-tab-target="#chat">Chat</a></li>
+            </ul>
+
+            <section class="client-content">
+                <div class="client-activities content-tab active" id="activity" data-tab-content>
+                    <div class="client-activities-container">
+                        <div class="client-status">
+                            <div class="client-medical">
+                                <div class="client-medical-header">🏥 Medical</div>
+                            </div>
+                            <div class="client-exam">
+                                <div class="client-exam-header">📝 Exam Stats</div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+                <div class="client-chat content-tab " id="chat" data-tab-content>
+                    <div class="chat__container">
+                        <div class="chat__container-header">
+                            <div class="chat-profile"> <img src="../assets/icons/person-64.png" alt="Teacher Profile"> </div>
+                        </div>
+
+                        <div class="chat__container-holder">
+                            <div class="chat-holder"></div>
+                            <form action="/student" method="post">
+                                <input type="text" name="mesage" id="message" placeholder="Write Your Message">
+                                <input type="submit" value="SEND">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+<!-- Tab Switching -->
+<script>
+    const tabs = document.querySelectorAll('[data-tab-target]');
+    const tabContents = document.querySelectorAll('[data-tab-content]');
+
+    // Loop Through the tabs
+    tabs.forEach(tab =>{
+        tab.addEventListener('click', ()=>{
+            const target = document.querySelector(tab.dataset.tabTarget);
+            tabContents.forEach(tabContent =>{
+                tabContent.classList.remove('active');
+            })
+            target.classList.add('active');
+        })
+    });
+</script>
+</body>
+</html>

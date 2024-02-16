@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Index Page</title>
+</head>
+<body>
+    Index Page
+    <button class="notification">
+        Show Notification
+    </button>
+
+    <script>
+        const notificationButton = document.querySelector('.notification');
+
+        notificationButton.addEventListener('click', () => {
+            Notification.requestPermission().then(perm => {
+                if (perm === 'granted') {
+                    new Notification('Example Notification', {
+                        body: "This is the body text",
+                        icon:"add.jpeg",
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
