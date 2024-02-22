@@ -10,9 +10,6 @@
     "data": "nodemon app.js",
     "test": "nodemon server.js"
   },
-  "devDependencies": {
-    "eslint": "^8.21.0"
-  },
   "eslintConfig": {},
   "dependencies": {
     "csv-parser": "^3.0.0",

@@ -26,10 +26,13 @@ app.use('assets', express.static(__dirname + 'public/assets'));
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 var studentRouter = require('./routes/student');
+var fileUploadRouter = require('./routes/fileUpload');
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 app.use('/student', studentRouter);
+app.use('/upload', fileUploadRouter);
+
 
 app.listen(port, function () {
         console.log(`listening on port localhost ${port}`);

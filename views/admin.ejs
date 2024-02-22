@@ -130,8 +130,9 @@
 
                                         </div>
 
-                                        <form action="/admin" method="post" class="add-activity-form not-show">
+                                        <form action="/admin/update" method="post" class="add-activity-form not-show">
                                             <h4>+ Add Activity</h4>
+                                            <input type="hidden" name="_id" id="_id" value="<%= students[i]._id %>">
                                             <input type="text" name="activityName" id="activityName" placeholder="Activity Name">
 
                                             <textarea name="activityDescription" id="activityDescription" cols="20" rows="10" placeholder="Activity Description"></textarea>
@@ -140,7 +141,41 @@
                                         <div class="all-activities-container">
                                             <div class="all-activities">
                                                 <div class="all-activities-header">Activities 🏅</div>
-                                                <div class="all-activities-body"></div>
+                                                <div class="all-activities-body">
+                                                    <!-- access objects -->
+                                                    <% for (let i = 0; i < students.length; i++) { %>
+                                                        <div>
+                                                            <div>
+                                                                <div>
+                                                                    <img src="../assets/Icons/person-64.png" alt="Student Image">
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div>
+                                                                    <h1><%= students[i].name %></h1>
+                                                                    <h4><%= students[i].class %></h4>
+                                                    
+                                                                    <!-- Accessing activityDetails for the current student -->
+                                                                    <% const activityDetails = students[i].activityDetails; %>
+                                                                    <% if (activityDetails) { %>
+                                                                        <% Object.keys(activityDetails).forEach(function(activityType) { %>
+                                                                            <h3><%= activityType %></h3>
+                                                                            <ul>
+                                                                                <% activityDetails[activityType].forEach(function(activity) { %>
+                                                                                    <li><strong>Activity:</strong> <%= activity.activityName %></li>
+                                                                                    <li><strong>Description:</strong> <%= activity.activityDescription %></li>
+                                                                                <% }); %>
+                                                                            </ul>
+                                                                        <% }); %>
+                                                                    <% } else { %>
+                                                                        <p>No activity details found for this student.</p>
+                                                                    <% } %>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <% } %>
+                                                    
+                                                </div>
             
                                             </div>
                                         </div>
@@ -411,12 +446,15 @@
     <script>
         const addButton = document.querySelectorAll(".add-button");
         const addActivitiesDialog = document.getElementById("add-activity-dialog");
-        const addActivityStudent = document.querySelector(".add-activity-form");
+        const addActivityStudent = document.querySelectorAll(".add-activity-form");
 
 
         addButton.forEach((buttonAdd)=>{
             buttonAdd.addEventListener('click', () => {
-                addActivityStudent.classList.remove("not-show");
+                // addActivityStudent.classList.remove("not-show");
+                addActivityStudent.forEach((activity)=>{
+                    activity.classList.remove("not-show");
+                });
                 console.log("Add Activity");
         
             });

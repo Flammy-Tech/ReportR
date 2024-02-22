@@ -5,6 +5,8 @@ const { ObjectId } = require('mongodb');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const csvParser = require('csv-parser');
+const multer = require('multer');
+
 
 // Initialize MongoDB Database
 var url = "mongodb://localhost:27017";
@@ -49,6 +51,20 @@ async function insertDocument(collectionName, document) {
     }
 }
 
+// Function to update a document inside a collection
+async function updateDocument(collectionName, filter, update) {
+    try {
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const result = await collection.updateOne(filter, { $set: update });
+        console.log(`Updated ${result.modifiedCount} document`);
+        return result.modifiedCount; // Return the number of modified documents
+    } catch (error) {
+        console.error('Error updating document:', error);
+        throw error;
+    }
+}
+
 // Function to read CSV file and return parsed data
 async function readCSVFile(filename) {
     return new Promise((resolve, reject) => {
@@ -76,6 +92,23 @@ async function writeCSVToFile(filename, data) {
 
 // Middleware to parse incoming request bodies
 router.use(bodyParser.urlencoded({ extended: true }));
+
+
+
+// --File Uploads
+
+// Multer configuration
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './public/uploads/') // Files will be stored in the 'uploads' directory
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname) // Use the original file name
+    }
+  })
+  
+  const upload = multer({ storage: storage });
+  
 
 // Setup routes
 router.route('/')
@@ -120,5 +153,49 @@ router.route('/')
             res.status(500).send("Internal Server Error");
         }
     });
+// Define a structure to hold activity details
+let activityDetails = {};
+
+router.route('/update')
+    .post(async (req, res) => {
+        try {
+            await connectToDatabase();
+
+            const activityName = req.body.activityName;
+            const activityDescription = req.body.activityDescription;
+
+            // Create an activity object
+            const activityObject = {
+                activityName: activityName,
+                activityDescription: activityDescription
+            };
+
+            // Check if activityName exists in the structure
+            if (activityDetails.hasOwnProperty(activityName)) {
+                // Add the new activity object to the existing array
+                activityDetails[activityName].push(activityObject);
+            } else {
+                // Create a new array with the activity object
+                activityDetails[activityName] = [activityObject];
+            }
+
+            // Update the document in the collection
+            const result = await client.db(dbName).collection('students').updateOne(
+                { _id: req.body._id.toString() }, // Assuming _id is present in the form
+                { $set: { activityDetails: activityDetails } } // Update the activity details in the document
+            );
+
+            if (result.modifiedCount > 0) {
+                res.status(200);
+            } else {
+                res.status(404).send("Document not found or not updated");
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
+
+
 
 module.exports = router;

@@ -1,0 +1,26 @@
+<!--Every Student -->
+
+<div>
+    <div>
+        <h1><%= students[i].name %></h1>
+        <h4><%= students[i].class %></h4>
+        <!-- Accessing activityDetails for the current student -->
+        <!-- Iterating over activity types and their details -->
+        <% const activityDetails = students[i].activityDetails; %>
+        <% if (activityDetails) { %>
+            <% Object.keys(activityDetails).forEach(function(activityType) { %>
+                <h3><%= activityType %></h3>
+                <ul>
+                    <!-- Iterating over activities within each type -->
+                    <% activityDetails[activityType].forEach(function(activity) { %>
+                        <li><strong>Activity:</strong> <%= activity.activityName %></li>
+                        <li><strong>Description:</strong> <%= activity.activityDescription %></li>
+                    <% }); %>
+                </ul>
+            <% }); %>
+        <% } else { %>
+            <p>No activity details found for this student.</p>
+        <% } %>
+    </div>
+</div>
+

@@ -770,7 +770,7 @@ footer{
 }
 
 .client__body-content{
-    height: 100%;
+    height: max-content;
     width: 100%;
     border-radius: var(--border-radius-links) var(--border-radius-links) 0 0;
     /* background-color: var(--white); */
@@ -779,7 +779,7 @@ footer{
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     z-index: 1;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 
 .client__body-content-header{
@@ -977,6 +977,8 @@ footer{
     transform: none !important;;
 
 }
+
+
 
 
 
