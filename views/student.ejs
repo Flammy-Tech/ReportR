@@ -40,20 +40,39 @@
             </ul>
 
             <section class="client-content">
-                <div class="client-activities content-tab active" id="activity" data-tab-content>
-                    <div class="client-activities-container">
-                        <div class="client-status">
-                            <div class="client-medical">
-                                <div class="client-medical-header">🏥 Medical</div>
-                            </div>
-                            <div class="client-exam">
-                                <div class="client-exam-header">📝 Exam Stats</div>
-                            </div>
-                        </div>
-                        
+ <!-- Assuming student is an array of documents -->
+<% student.forEach(function(student) { %>
+    <div class="client-activities content-tab active" id="activity" data-tab-content>
+        <div class="client-activities-container">
+            <div class="client-status">
+                <% if (student.activityDetails && student.activityDetails.medical) { %>
+                    <div class="client-medical">
+                        <div class="client-medical-header">🏥 Medical</div>
+                        <ul>
+                            <% student.activityDetails.medical.forEach(function(medicalActivity) { %>
+                                <li><strong>Activity:</strong> <%= medicalActivity.activityName %></li>
+                                <li><strong>Description:</strong> <%= medicalActivity.activityDescription %></li>
+                            <% }); %>
+                        </ul>
                     </div>
+                <% } %>
 
-                </div>
+                <% if (student.activityDetails && student.activityDetails.exam) { %>
+                    <div class="client-exam">
+                        <div class="client-exam-header">📝 Exam Stats</div>
+                        <ul>
+                            <% student.activityDetails.exam.forEach(function(examActivity) { %>
+                                <li><strong>Activity:</strong> <%= examActivity.activityName %></li>
+                                <li><strong>Description:</strong> <%= examActivity.activityDescription %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+<% }); %>
+
 
                 <div class="client-chat content-tab " id="chat" data-tab-content>
                     <div class="chat__container">
